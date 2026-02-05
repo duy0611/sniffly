@@ -4,7 +4,6 @@
 .env.sniffly.dev.example
 
 # Dev files
-CLAUDE.md
 docs/specs.md
 docs/sniffly-distribution-plan.md
 docs/dashboard-html-structure.md
