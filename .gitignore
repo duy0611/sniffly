@@ -9,6 +9,7 @@ docs/sniffly-distribution-plan.md
 docs/dashboard-html-structure.md
 docs/README-ADMIN.md
 start*.sh
+.worktrees/
 
 graphs/*
 uploads/*
