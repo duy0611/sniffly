@@ -241,10 +241,9 @@ class TestConfig:
         """Test that PRICING_PROVIDER environment variable overrides config."""
         with CliRunner().isolated_filesystem():
             config_dir = Path('.sniffly')
-            os.environ["PRICING_PROVIDER"] = "vertex_ai_regional"
-            config = Config(config_dir=config_dir)
-            assert config.get("pricing_provider") == "vertex_ai_regional"
-            del os.environ["PRICING_PROVIDER"]
+            with patch.dict(os.environ, {"PRICING_PROVIDER": "vertex_ai_regional"}):
+                config = Config(config_dir=config_dir)
+                assert config.get("pricing_provider") == "vertex_ai_regional"
 
     def test_pricing_provider_validation(self):
         """Test that invalid pricing providers are handled."""

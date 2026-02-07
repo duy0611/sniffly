@@ -49,6 +49,50 @@ DEFAULT_CLAUDE_PRICING = {
     },
 }
 
+# Vertex AI pricing (global endpoints)
+# Source: https://cloud.google.com/vertex-ai/generative-ai/pricing
+# Last updated: 2026-02-05
+# Note: Global endpoint pricing matches Anthropic API pricing
+# Regional endpoints add 10% premium (applied at calculation time)
+VERTEX_AI_PRICING = {
+    "claude-opus-4-20250514": {
+        "input_cost_per_token": 15.0 / 1_000_000,
+        "output_cost_per_token": 75.0 / 1_000_000,
+        "cache_creation_cost_per_token": 18.75 / 1_000_000,
+        "cache_read_cost_per_token": 1.50 / 1_000_000,
+    },
+    "claude-3-5-sonnet-20241022": {
+        "input_cost_per_token": 3.0 / 1_000_000,
+        "output_cost_per_token": 15.0 / 1_000_000,
+        "cache_creation_cost_per_token": 3.75 / 1_000_000,
+        "cache_read_cost_per_token": 0.30 / 1_000_000,
+    },
+    "claude-3-5-haiku-20241022": {
+        "input_cost_per_token": 1.0 / 1_000_000,
+        "output_cost_per_token": 5.0 / 1_000_000,
+        "cache_creation_cost_per_token": 1.25 / 1_000_000,
+        "cache_read_cost_per_token": 0.10 / 1_000_000,
+    },
+    "claude-3-opus-20240229": {
+        "input_cost_per_token": 15.0 / 1_000_000,
+        "output_cost_per_token": 75.0 / 1_000_000,
+        "cache_creation_cost_per_token": 18.75 / 1_000_000,
+        "cache_read_cost_per_token": 1.50 / 1_000_000,
+    },
+    "claude-3-sonnet-20240229": {
+        "input_cost_per_token": 3.0 / 1_000_000,
+        "output_cost_per_token": 15.0 / 1_000_000,
+        "cache_creation_cost_per_token": 3.75 / 1_000_000,
+        "cache_read_cost_per_token": 0.30 / 1_000_000,
+    },
+    "claude-3-haiku-20240307": {
+        "input_cost_per_token": 0.25 / 1_000_000,
+        "output_cost_per_token": 1.25 / 1_000_000,
+        "cache_creation_cost_per_token": 0.30 / 1_000_000,
+        "cache_read_cost_per_token": 0.03 / 1_000_000,
+    },
+}
+
 # Cache for dynamic pricing
 _dynamic_pricing_cache = None
 
