@@ -1,10 +1,11 @@
-import logging
-
 """
 Pricing utilities for calculating Claude API costs.
 Uses LiteLLM pricing data with local fallback.
 """
 
+import logging
+
+from ..config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -105,8 +106,12 @@ def get_dynamic_pricing() -> dict[str, dict[str, float]]:
         try:
             from ..services.pricing_service import PricingService
 
+            # Get pricing provider from config
+            config = Config()
+            pricing_provider = config.get("pricing_provider", "anthropic")
+
             service = PricingService()
-            pricing_data = service.get_pricing()
+            pricing_data = service.get_pricing(provider=pricing_provider)
             _dynamic_pricing_cache = pricing_data.get("pricing", DEFAULT_CLAUDE_PRICING)
         except Exception as e:
             logger.info(f"Error loading dynamic pricing: {e}")
@@ -164,6 +169,16 @@ def calculate_cost(tokens: dict[str, int], model: str) -> dict[str, float]:
         "cache_creation_cost": tokens.get("cache_creation", 0) * pricing["cache_creation_cost_per_token"],
         "cache_read_cost": tokens.get("cache_read", 0) * pricing["cache_read_cost_per_token"],
     }
+
+    # Apply 10% regional premium for vertex_ai_regional
+    config = Config()
+    pricing_provider = config.get("pricing_provider", "anthropic")
+    if pricing_provider == "vertex_ai_regional":
+        regional_premium = 1.10
+        costs["input_cost"] *= regional_premium
+        costs["output_cost"] *= regional_premium
+        costs["cache_creation_cost"] *= regional_premium
+        costs["cache_read_cost"] *= regional_premium
 
     costs["total_cost"] = sum(costs.values())
     return costs
