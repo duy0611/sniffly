@@ -39,3 +39,13 @@ class TestVertexAIPricing:
             vertex = VERTEX_AI_PRICING[model]
             assert anthropic["input_cost_per_token"] == vertex["input_cost_per_token"]
             assert anthropic["output_cost_per_token"] == vertex["output_cost_per_token"]
+            assert anthropic["cache_creation_cost_per_token"] == vertex["cache_creation_cost_per_token"]
+            assert anthropic["cache_read_cost_per_token"] == vertex["cache_read_cost_per_token"]
+
+    def test_vertex_ai_sonnet_pricing_accuracy(self):
+        """Test that Vertex AI Sonnet 3.5 pricing matches documented values."""
+        sonnet = VERTEX_AI_PRICING["claude-3-5-sonnet-20241022"]
+        assert sonnet["input_cost_per_token"] == 3.0 / 1_000_000
+        assert sonnet["output_cost_per_token"] == 15.0 / 1_000_000
+        assert sonnet["cache_creation_cost_per_token"] == 3.75 / 1_000_000
+        assert sonnet["cache_read_cost_per_token"] == 0.30 / 1_000_000
