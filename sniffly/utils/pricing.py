@@ -11,13 +11,41 @@ logger = logging.getLogger(__name__)
 
 # Default pricing in USD per token (not per million)
 # Based on Anthropic's public pricing
+# Source: https://platform.claude.com/docs/en/about-claude/pricing
 DEFAULT_CLAUDE_PRICING = {
+    # Latest models (Claude 4.5/4.6 generation)
+    "claude-opus-4-6": {
+        "input_cost_per_token": 5.0 / 1_000_000,  # $5 per million
+        "output_cost_per_token": 25.0 / 1_000_000,  # $25 per million
+        "cache_creation_cost_per_token": 6.25 / 1_000_000,  # $6.25 per million (5m cache)
+        "cache_read_cost_per_token": 0.50 / 1_000_000,  # $0.50 per million
+    },
+    "claude-opus-4-5-20251101": {
+        "input_cost_per_token": 5.0 / 1_000_000,  # $5 per million
+        "output_cost_per_token": 25.0 / 1_000_000,  # $25 per million
+        "cache_creation_cost_per_token": 6.25 / 1_000_000,  # $6.25 per million (5m cache)
+        "cache_read_cost_per_token": 0.50 / 1_000_000,  # $0.50 per million
+    },
+    "claude-sonnet-4-5-20250929": {
+        "input_cost_per_token": 3.0 / 1_000_000,  # $3 per million
+        "output_cost_per_token": 15.0 / 1_000_000,  # $15 per million
+        "cache_creation_cost_per_token": 3.75 / 1_000_000,  # $3.75 per million (5m cache)
+        "cache_read_cost_per_token": 0.30 / 1_000_000,  # $0.30 per million
+    },
+    "claude-haiku-4-5-20251001": {
+        "input_cost_per_token": 1.0 / 1_000_000,  # $1 per million
+        "output_cost_per_token": 5.0 / 1_000_000,  # $5 per million
+        "cache_creation_cost_per_token": 1.25 / 1_000_000,  # $1.25 per million (5m cache)
+        "cache_read_cost_per_token": 0.10 / 1_000_000,  # $0.10 per million
+    },
+    # Legacy models (Claude 4.0 generation)
     "claude-opus-4-20250514": {
         "input_cost_per_token": 15.0 / 1_000_000,  # $15 per million
         "output_cost_per_token": 75.0 / 1_000_000,  # $75 per million
         "cache_creation_cost_per_token": 18.75 / 1_000_000,  # $18.75 per million
         "cache_read_cost_per_token": 1.50 / 1_000_000,  # $1.50 per million
     },
+    # Legacy models (Claude 3.5 generation)
     "claude-3-5-sonnet-20241022": {
         "input_cost_per_token": 3.0 / 1_000_000,  # $3 per million
         "output_cost_per_token": 15.0 / 1_000_000,  # $15 per million
@@ -30,6 +58,7 @@ DEFAULT_CLAUDE_PRICING = {
         "cache_creation_cost_per_token": 1.25 / 1_000_000,  # $1.25 per million
         "cache_read_cost_per_token": 0.10 / 1_000_000,  # $0.10 per million
     },
+    # Legacy models (Claude 3.0 generation)
     "claude-3-opus-20240229": {
         "input_cost_per_token": 15.0 / 1_000_000,  # $15 per million
         "output_cost_per_token": 75.0 / 1_000_000,  # $75 per million
@@ -52,16 +81,44 @@ DEFAULT_CLAUDE_PRICING = {
 
 # Vertex AI pricing (global endpoints)
 # Source: https://cloud.google.com/vertex-ai/generative-ai/pricing
-# Last updated: 2026-02-05
-# Note: Global endpoint pricing matches Anthropic API pricing
+# Last updated: 2026-02-07
+# Note: Global endpoint pricing matches Anthropic API pricing for most models
 # Regional endpoints add 10% premium (applied at calculation time)
+# Cache pricing uses 5m cache write tier (Vertex AI also offers 1h cache write at higher cost)
 VERTEX_AI_PRICING = {
+    # Latest models (Claude 4.5/4.6 generation)
+    "claude-opus-4-6": {
+        "input_cost_per_token": 5.0 / 1_000_000,
+        "output_cost_per_token": 25.0 / 1_000_000,
+        "cache_creation_cost_per_token": 6.25 / 1_000_000,  # 5m cache write
+        "cache_read_cost_per_token": 0.50 / 1_000_000,
+    },
+    "claude-opus-4-5-20251101": {
+        "input_cost_per_token": 5.0 / 1_000_000,
+        "output_cost_per_token": 25.0 / 1_000_000,
+        "cache_creation_cost_per_token": 6.25 / 1_000_000,  # 5m cache write
+        "cache_read_cost_per_token": 0.50 / 1_000_000,
+    },
+    "claude-sonnet-4-5-20250929": {
+        "input_cost_per_token": 3.0 / 1_000_000,
+        "output_cost_per_token": 15.0 / 1_000_000,
+        "cache_creation_cost_per_token": 3.75 / 1_000_000,  # 5m cache write
+        "cache_read_cost_per_token": 0.30 / 1_000_000,
+    },
+    "claude-haiku-4-5-20251001": {
+        "input_cost_per_token": 1.0 / 1_000_000,
+        "output_cost_per_token": 5.0 / 1_000_000,
+        "cache_creation_cost_per_token": 1.25 / 1_000_000,  # 5m cache write
+        "cache_read_cost_per_token": 0.10 / 1_000_000,
+    },
+    # Legacy models (Claude 4.0 generation)
     "claude-opus-4-20250514": {
         "input_cost_per_token": 15.0 / 1_000_000,
         "output_cost_per_token": 75.0 / 1_000_000,
         "cache_creation_cost_per_token": 18.75 / 1_000_000,
         "cache_read_cost_per_token": 1.50 / 1_000_000,
     },
+    # Legacy models (Claude 3.5 generation)
     "claude-3-5-sonnet-20241022": {
         "input_cost_per_token": 3.0 / 1_000_000,
         "output_cost_per_token": 15.0 / 1_000_000,
@@ -74,6 +131,7 @@ VERTEX_AI_PRICING = {
         "cache_creation_cost_per_token": 1.25 / 1_000_000,
         "cache_read_cost_per_token": 0.10 / 1_000_000,
     },
+    # Legacy models (Claude 3.0 generation)
     "claude-3-opus-20240229": {
         "input_cost_per_token": 15.0 / 1_000_000,
         "output_cost_per_token": 75.0 / 1_000_000,
