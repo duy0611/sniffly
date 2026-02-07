@@ -9,7 +9,7 @@ import urllib.request
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from ..utils.pricing import DEFAULT_CLAUDE_PRICING
+from ..utils.pricing import DEFAULT_CLAUDE_PRICING, VERTEX_AI_PRICING
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +26,12 @@ class PricingService:
         # Ensure cache directory exists
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-    def get_pricing(self) -> dict[str, any]:
+    def get_pricing(self, provider: str = "anthropic") -> dict[str, any]:
         """
         Get pricing with intelligent cache and fallback logic.
+
+        Args:
+            provider: Pricing provider ('anthropic', 'vertex_ai', 'vertex_ai_regional')
 
         Returns:
             Dict with keys:
@@ -37,6 +40,14 @@ class PricingService:
             - timestamp: When prices were fetched
             - is_stale: Boolean indicating if cache is expired
         """
+        # Handle Vertex AI providers - return manual pricing
+        if provider in ("vertex_ai", "vertex_ai_regional"):
+            return {
+                "pricing": VERTEX_AI_PRICING,
+                "source": "manual",
+                "timestamp": datetime.utcnow().isoformat(),
+                "is_stale": False,
+            }
         # Check if cache exists and load it
         cache_data = self._load_cache()
 

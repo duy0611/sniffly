@@ -216,8 +216,40 @@ class TestConfig:
             config_dir = Path('.sniffly')
             cfg = Config(config_dir=config_dir)
             cfg.set('port', 9000)
-            
+
             all_config = cfg.get_all()
             assert all_config['port'] == 9000
             assert all_config['auto_browser'] is True
             assert len(all_config) == len(Config.DEFAULTS)
+
+    def test_pricing_provider_default(self):
+        """Test that pricing_provider defaults to 'anthropic'."""
+        with CliRunner().isolated_filesystem():
+            config_dir = Path('.sniffly')
+            config = Config(config_dir=config_dir)
+            assert config.get("pricing_provider") == "anthropic"
+
+    def test_pricing_provider_set_and_get(self):
+        """Test setting and getting pricing_provider."""
+        with CliRunner().isolated_filesystem():
+            config_dir = Path('.sniffly')
+            config = Config(config_dir=config_dir)
+            config.set("pricing_provider", "vertex_ai")
+            assert config.get("pricing_provider") == "vertex_ai"
+
+    def test_pricing_provider_environment_override(self):
+        """Test that PRICING_PROVIDER environment variable overrides config."""
+        with CliRunner().isolated_filesystem():
+            config_dir = Path('.sniffly')
+            with patch.dict(os.environ, {"PRICING_PROVIDER": "vertex_ai_regional"}):
+                config = Config(config_dir=config_dir)
+                assert config.get("pricing_provider") == "vertex_ai_regional"
+
+    def test_pricing_provider_validation(self):
+        """Test that invalid pricing providers are handled."""
+        with CliRunner().isolated_filesystem():
+            config_dir = Path('.sniffly')
+            config = Config(config_dir=config_dir)
+            # Should not raise - validation happens at usage time
+            config.set("pricing_provider", "invalid_provider")
+            assert config.get("pricing_provider") == "invalid_provider"

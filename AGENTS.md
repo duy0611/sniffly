@@ -45,6 +45,22 @@ Main entry point: `sniffly` command (defined in `sniffly.cli:cli`)
 | `sniffly config show` | Show current config |
 | `sniffly help` | Show help |
 
+### Pricing Providers
+Configure which pricing source to use for cost calculations:
+
+```bash
+# Anthropic API pricing (default)
+sniffly config set pricing_provider anthropic
+
+# Vertex AI global endpoint pricing (us-central1)
+sniffly config set pricing_provider vertex_ai_global
+
+# Vertex AI regional endpoint pricing (+10% premium)
+sniffly config set pricing_provider vertex_ai_regional
+```
+
+See `docs/pricing-providers.md` for detailed documentation.
+
 ### Development Setup
 **Recommended**: Use pyenv + venv + Makefile:
 ```bash

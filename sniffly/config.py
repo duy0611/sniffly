@@ -25,6 +25,7 @@ DEFAULTS = {
     "share_base_url": "https://sniffly.dev",
     "share_api_url": "https://sniffly.dev",
     "share_enabled": True,
+    "pricing_provider": "anthropic",
 }
 
 # Map config keys to environment variable names
@@ -43,6 +44,7 @@ ENV_MAPPINGS = {
     "share_base_url": "SHARE_BASE_URL",
     "share_api_url": "SHARE_API_URL",
     "share_enabled": "SHARE_ENABLED",
+    "pricing_provider": "PRICING_PROVIDER",
 }
 
 
