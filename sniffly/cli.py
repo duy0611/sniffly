@@ -229,6 +229,7 @@ Usage Examples:
   # Set configuration value
   sniffly config set port 8090
   sniffly config set auto_browser false
+  sniffly config set pricing_provider vertex_ai_global
   
   # Clear cache
   sniffly init --clear-cache
@@ -247,6 +248,7 @@ Configuration Keys:
   enable_memory_monitor     - Enable memory monitoring (default: false)
   enable_background_processing - Enable background stats (default: true)
   cache_warm_on_startup     - Projects to warm on startup (default: 3)
+  pricing_provider          - Pricing source: anthropic, vertex_ai_global, or vertex_ai_regional (default: anthropic)
 
 For more information, visit: https://sniffly.dev
 """
